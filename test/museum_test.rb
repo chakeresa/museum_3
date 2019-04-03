@@ -70,8 +70,15 @@ class MuseumTest < Minitest::Test
     @dmns.admit(@bob)
     @dmns.admit(@sally)
 
+    expected = {
+      @dead_sea_scrolls => [@bob],
+      @imax => [@bob],
+      @mermaids => [@sally]
+    }
+
     assert_equal 30 - 15 - 10, @bob.spending_money
     assert_equal 20 - 20, @sally.spending_money
+    assert_equal expected, @dmns.patrons_of_exhibits
   end
 
   def test_attend_transfers_money_from_patron_to_museum
@@ -98,5 +105,51 @@ class MuseumTest < Minitest::Test
       @imax => []
     }
     assert_equal expected, @dmns.patrons_by_exhibit_interest
+  end
+
+  def test_full_sequence_of_museum
+    dmns = Museum.new("Denver Museum of Nature and Science")
+    gems_and_minerals = Exhibit.new("Gems and Minerals", 0)
+    imax = Exhibit.new("IMAX", 15)
+    dead_sea_scrolls = Exhibit.new("Dead Sea Scrolls", 10)
+    dmns.add_exhibit(gems_and_minerals)
+    dmns.add_exhibit(imax)
+    dmns.add_exhibit(dead_sea_scrolls)
+    tj = Patron.new("TJ", 7)
+    tj.add_interest("IMAX")
+    tj.add_interest("Dead Sea Scrolls")
+    dmns.admit(tj)
+
+    assert_equal 7, tj.spending_money
+
+    bob = Patron.new("Bob", 10)
+    bob.add_interest("Dead Sea Scrolls")
+    bob.add_interest("IMAX")
+    dmns.admit(bob)
+
+    assert_equal 0, bob.spending_money
+
+    sally = Patron.new("Sally", 20)
+    sally.add_interest("Dead Sea Scrolls")
+    sally.add_interest("IMAX")
+    dmns.admit(sally)
+
+    assert_equal 5, sally.spending_money
+
+    morgan = Patron.new("Morgan", 15)
+    morgan.add_interest("Gems and Minerals")
+    morgan.add_interest("Dead Sea Scrolls")
+    dmns.admit(morgan)
+
+    assert_equal 5, morgan.spending_money
+
+    expected = {
+      @gems_and_minerals => [@morgan], #TO DO: morgan isn't attending but should be!
+      @imax => [@bob, @sally],
+      @dead_sea_scrolls => [@morgan]
+    }
+
+    assert_equal expected, dmns.patrons_of_exhibits
+    assert_equal 35, dmns.revenue
   end
 end

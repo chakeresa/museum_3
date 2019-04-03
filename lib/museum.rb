@@ -43,6 +43,11 @@ class Museum
     cost = exhibit.cost
     patron.spending_money -= cost
     @revenue += cost
+    if !@patrons_of_exhibits.keys.include?(exhibit)
+      patrons_of_exhibits[exhibit] = []
+    end
+    @patrons_of_exhibits[exhibit] << patron
+    @patrons_of_exhibits
   end
 
   def patrons_by_exhibit_interest
