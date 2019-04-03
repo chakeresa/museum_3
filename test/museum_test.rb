@@ -27,6 +27,10 @@ class MuseumTest < Minitest::Test
     assert_equal [], @dmns.patrons
   end
 
+  def test_it_inits_with_empty_hash_of_patrons_of_exhibits
+    assert_equal ({}), @dmns.patrons_of_exhibits
+  end
+
   def test_add_exhibit_adds_to_ary_of_exhibits
     @dmns.add_exhibit(@gems_and_minerals)
     @dmns.add_exhibit(@dead_sea_scrolls)

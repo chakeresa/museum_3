@@ -5,7 +5,8 @@ class Museum
   attr_reader :name,
               :exhibits,
               :patrons,
-              :revenue
+              :revenue,
+              :patrons_of_exhibits
 
   def initialize(name)
     @name = name
