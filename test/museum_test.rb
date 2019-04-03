@@ -51,7 +51,6 @@ class MuseumTest < Minitest::Test
   end
 
   def test_patrons_by_exhibit_interest_returns_a_hash_with_exhibits_as_keys_and_ary_of_interested_patrons_as_values
-    skip
     @dmns.add_exhibit(@gems_and_minerals)
     @dmns.add_exhibit(@dead_sea_scrolls)
     @dmns.add_exhibit(@imax)

@@ -25,6 +25,12 @@ class Museum
   end
 
   def patrons_by_exhibit_interest
-
+    @exhibits.inject(Hash.new([])) do |hash, exhibit|
+      interested_patrons = @patrons.find_all do |patron|
+        patron.interests.include?(exhibit.name)
+      end
+      hash[exhibit] = interested_patrons
+      hash
+    end
   end
 end
