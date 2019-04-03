@@ -27,9 +27,14 @@ class Museum
 
   def admit(patron)
     @patrons << patron
-    sorted_interests = patron.interests.sort.reverse
-    sorted_interests.each do |interest|
-      # if enough money, attend
+    sorted_exhibits = recommend_exhibits(patron).sort_by do |exhibit|
+      exhibit.cost
+    end
+    sorted_exhibits.reverse!
+    sorted_exhibits.each do |exhibit|
+      if patron.spending_money >= exhibit.cost
+        attend(patron, exhibit)
+      end
     end
   end
 

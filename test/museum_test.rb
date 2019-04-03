@@ -7,8 +7,9 @@ class MuseumTest < Minitest::Test
     @dmns = Museum.new("Denver Museum of Nature and Science")
     @gems_and_minerals = Exhibit.new("Gems and Minerals", 0)
     @dead_sea_scrolls = Exhibit.new("Dead Sea Scrolls", 10)
+    @mermaids = Exhibit.new("Mermaids", 20)
     @imax = Exhibit.new("IMAX", 15)
-    @bob = Patron.new("Bob", 20)
+    @bob = Patron.new("Bob", 30)
     @sally = Patron.new("Sally", 20)
   end
 
@@ -54,12 +55,27 @@ class MuseumTest < Minitest::Test
     assert_equal [@bob, @sally], @dmns.patrons
   end
 
+  def test_admit_makes_patrons_attend_exhibits_they_are_interested_in_and_can_afford
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+    @dmns.add_exhibit(@mermaids)
+    @bob.add_interest("Dead Sea Scrolls")
+    @bob.add_interest("IMAX")
+    @sally.add_interest("Dead Sea Scrolls")
+    @sally.add_interest("Mermaids")
+    @dmns.admit(@bob)
+    @dmns.admit(@sally)
+
+    assert_equal 30 - 15 - 10, @bob.spending_money
+    assert_equal 20 - 20, @sally.spending_money
+  end
+
   def test_attend_transfers_money_from_patron_to_museum
     @dmns.attend(@bob, @gems_and_minerals)
     @dmns.attend(@bob, @dead_sea_scrolls)
 
-    assert_equal 20-0-10, @bob.spending_money
-    assert_equal 0+0+10, @dmns.revenue
+    assert_equal 30 - 0 - 10, @bob.spending_money
+    assert_equal 0 + 0 + 10, @dmns.revenue
   end
 
   def test_patrons_by_exhibit_interest_returns_a_hash_with_exhibits_as_keys_and_ary_of_interested_patrons_as_values
