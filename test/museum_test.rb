@@ -8,6 +8,8 @@ class MuseumTest < Minitest::Test
     @gems_and_minerals = Exhibit.new("Gems and Minerals", 0)
     @dead_sea_scrolls = Exhibit.new("Dead Sea Scrolls", 10)
     @imax = Exhibit.new("IMAX", 15)
+    @bob = Patron.new("Bob", 20)
+    @sally = Patron.new("Sally", 20)
   end
 
   def test_it_exists
@@ -25,5 +27,14 @@ class MuseumTest < Minitest::Test
     @dmns.add_exhibit(@imax)
 
     assert_equal [@gems_and_minerals, @dead_sea_scrolls, @imax], @dmns.exhibits
+  end
+
+  def test_recommend_exhibits_returns_ary_of_exhibits_matching_a_patrons_interests
+    @bob.add_interest("Dead Sea Scrolls")
+    @bob.add_interest("Gems and Minerals")
+    @sally.add_interest("IMAX")
+
+    assert_equal [@dead_sea_scrolls, @gems_and_minerals], @dmns.recommend_exhibits(@bob)
+    assert_equal [@imax], @dmns.recommend_exhibits(@sally)
   end
 end
