@@ -144,9 +144,9 @@ class MuseumTest < Minitest::Test
     assert_equal 5, morgan.spending_money
 
     expected = {
-      gems_and_minerals => [morgan], # bob shouldn't be attending (but isn't) :-(
-      imax => [bob, sally], # bob should be attending (but isn't) :-(
-      dead_sea_scrolls => [morgan]
+      gems_and_minerals => [morgan],
+      imax => [sally],
+      dead_sea_scrolls => [bob, morgan]
     }
 
     assert_equal expected, dmns.patrons_of_exhibits
